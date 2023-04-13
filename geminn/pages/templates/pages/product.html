@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block scripts %}
+    {% static 'js/pages.js' %}
+{% endblock %}
+
+{% block title %}Product{% endblock %}
+
+{% block heading %}{{ product.title }}{% endblock %}
+
+{% block content %}
+
+    <section>
+        <div class="d-flex justify-content-between align-items-center flex-wrap row-gap-4">
+            <div>
+                {% if product_unit_count < 1 %}
+                    <span class="bg-secondary text-white px-4 py-2 rounded fw-bold text-wrap">Out of stock</span>
+                {% elif product_unit_count == 1 %}
+                    <span class="bg-warning px-4 py-2 rounded fw-bold text-wrap">We've got only 1 left! Hurry!</span>
+                {% elif product_unit_count == 2 %}
+                    <span class="bg-warning px-4 py-2 rounded fw-bold text-wrap">We've got only 2 left! Hurry!</span>
+                {% elif product_unit_count == 3 %}
+                    <span class="bg-warning px-4 py-2 rounded fw-bold text-wrap">We've got only 3 left! Hurry!</span>
+                {% else %}
+                    <span class="bg-success text-white px-4 py-2 rounded fw-bold text-wrap">In stock</span> 
+                {% endif %}
+            </div>
+            <div class="d-flex justify-content-end flex-wrap column-gap-2 row-gap-2">
+                <button href="#" id="add_to_bag" value="{{ product.id }}" class="btn btn-danger fw-bold">
+                    Add to bag
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bag-check-fill text-white" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                    </svg>
+                </button>
+                <button href="#" id="remove_from_bag" class="btn btn-secondary fw-bold">
+                    Remove from bag
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bag-x-fill text-white" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM6.854 8.146a.5.5 0 1 0-.708.708L7.293 10l-1.147 1.146a.5.5 0 0 0 .708.708L8 10.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 10l1.147-1.146a.5.5 0 0 0-.708-.708L8 9.293 6.854 8.146z"/>
+                    </svg>
+                </button>
+                <button href="#" id="add_to_favorites" class="btn btn-warning text-dark fw-bold">
+                    Add to favorites
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-bag-heart-fill text-dark" viewBox="0 0 16 16">
+                        <path d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5ZM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1Zm0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="row mt-4 row-gap-4">
+            <div class="col-md-4 col-lg-5 d-flex flex-column">
+
+                <div class="mb-1">
+                    <img id="set_image" src="{{ product_unit_image_default_for_product.image.url }}" class="object-fit-cover border rounded product-unit-images" style="width: 26rem; height: 17.5rem;">
+                </div>
+
+                <div class="d-flex flex-wrap column-gap-1">
+                    {% for product_image in product_unit_images %}
+                        {% if product_image.product == product %}
+                            
+                            <img id="image_setter" src="{{ product_image.image.url }}" class="object-fit-cover border rounded product-unit-images" alt="{{ product_image.alt_text }}" style="width: 5rem; cursor: pointer;" onclick="switchImage(this);">
+                            
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+            <div class="col-md-2 col-lg-1">
+
+            </div>
+            <div class="col-md-6 col-lg-6">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="d-flex flex-column">
+                        <span class="fw-bold">Retail Price</span>
+                        <span class="fw-bold fs-4">{{ product.retail_price }} {{ product.retail_price_unit }}</span>
+                    </span>
+                    <div class="dropdown">
+                        <label for="select-qty" class="fw-bold">Quantity</label>
+                        <select id="select-qty" class="p-2 rounded">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column column-gap-2 flex-wrap mt-4">
+                    <span class="fs-6 fw-bold">Specifications</span>
+                    <div class="d-flex column-gap-3 flex-wrap">
+                        {% for product_specification in product_specifications %}
+                        <span class="fs-5 d-flex flex-column">
+                            <span class="">{{ product_specification.title|lower }}</span>
+                            <select id="select" class="p-1 rounded">
+                            {% for value in related_product_specification_values %}
+                                {% if product_specification.slug == value.product_specification.slug %}
+                                    {% if value.value %}
+                                        <option value="{{ value }}" class="fw-bold">
+                                            {{ value.value|lower }}
+                                        </option>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            </select>
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-column column-gap-2 flex-wrap mt-4">
+                    <span class="fs-6 fw-bold">Description</span>
+                    <p class="fs-5">{{ product.description }}</p>
+                </div>
+                
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        
+        <div class="reviews">
+            <div>
+
+            </div>
+        </div>
+
+    </section>
+
+
+    <script>
+    $(document).on('click', '#add_to_bag', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '{% url "bag:bag_add" %}',
+        data: {
+          productid: $('#add_to_bag').val(),
+          productqty: $('#select-qty option:selected').text(),
+          csrfmiddlewaretoken: "{{csrf_token}}",
+          action: 'POST'
+        },
+        success: function (json) {
+          document.getElementById("bag-qty").innerHTML = json.qty
+        },
+        error: function (xhr, errmsg, err) {}
+      });
+    })
+  </script>
+
+{% endblock %}

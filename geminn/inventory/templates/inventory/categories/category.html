@@ -1,0 +1,141 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{{ category.title|title }} Category{% endblock %}
+
+{% block content %}
+    <section class="category px-3 mb-5">
+        {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {% for message in messages  %}
+                    <strong>{{ message|safe }}</strong>. Would you like to add sub-categories to this category? If yes, <a href="#add-sub-category" class="alert-link">click here</a>. If you would prefer to go back to the categories list, <a href="{% url 'inventory:categories' %}" class="alert-link">click here instead — Categories</a>.
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+
+        <div class="category-title mb-3 pb-0 d-flex justify-content-between">
+            <h3 class="fs-4">Category: <span class="fw-bold">{{ category.title|title }}</span></h3>
+        </div>
+
+        <div class="category-description row">
+            <h4 class="border-bottom fs-5">Description:</h4>
+            <p class="fw-bold">{{ category.description|title }}</p>
+        </div>
+    </section>
+
+    <section class="sub-categories px-3 mt-4 mb-5">
+        {% if sub_categories %}
+            <div class="d-flex justify-content-between row-gap-3 column-gap-5 pt-1 mb-3 border-bottom">
+                <h4 class="fs-5">Sub-categories of <span class="fw-bold">{{ category.title|title }}</span></h4>
+                <a href="#add-sub-category" class="text-end text-decoration-none text-danger">
+                    Add new sub-category to the <span class="fw-bold">{{ category.title|title }}</span> category
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-square-fill text-danger" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="overflow-x-scroll">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="fw-bold">Title</th>
+                            <th scope="col" class="fw-bold">Description</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sub_category in sub_categories %}
+                            <tr>
+                                <td>{{ sub_category.title|title }}</td>
+                                <td>{{ sub_category.description|title }}</td>
+                                <td>
+                                    <a href="{% url 'inventory:view_sub_category' category.slug sub_category.slug %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill text-success" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'inventory:update_sub_category' category.slug sub_category.slug %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square text-warning" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'inventory:delete_sub_category' category.slug sub_category.slug %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill text-secondary" viewBox="0 0 16 16">
+                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+
+            <div>
+                {{ category.title|title }} category has no sub-categories yet. <a href="#add-sub-category" class="alert-link text-danger text-decoration-none">Add one&nbsp;
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </a>
+            </div>
+
+        {% endif %}
+    </section>
+
+    <section id="add-sub-category" class="px-3">
+        <div class="d-flex justify-content-between row-gap-3 column-gap-5 pt-1 mb-3 border-bottom">
+            <h4 class="fs-5">Add a new sub-category to the category <span class="fw-bold">{{ category.title|title }}</span></h4>
+            <a href="#" class="text-end text-decoration-none text-danger">Go back to top&nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                </svg>
+            </a>
+        </div>
+
+        <div>
+            <form action="{% url 'inventory:add_sub_category' category.slug %}" method="POST">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error: Please try again!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="title" class="form-label small fw-bold">{{ form.title.label }}</label>
+                        <div class="input-group">
+                            {{ form.title }}
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <label for="description" class="form-label small fw-bold">{{ form.description.label }}</label>
+                        <div class="input-group">
+                            {{ form.description }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-danger mb-4 mt-4 px-5 fw-bold" type="submit">
+                        Add Sub-category
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+        
+    </section>
+{% endblock %}

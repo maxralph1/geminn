@@ -23,12 +23,12 @@ class CustomAccountsManager(BaseUserManager):
         try:
             validate_email(email)
         except ValidationError:
-            raise ValueError(_("You must provide a valid email address"))
+            raise ValueError(_('You must provide a valid email address'))
 
     def validatePassword(self, password):
         if len(password) < 8:
             raise ValidationError(
-                "This password is too short. It must contain at least 8 characters.",
+                'This password is too short. It must contain at least 8 characters.',
             )
 
     def create_superuser(self, username, email, password, **other_fields):
@@ -52,15 +52,17 @@ class CustomAccountsManager(BaseUserManager):
 
 
 class UserModel(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=100, unique=True)
-    email = models.CharField((_("Email address")), unique=True, max_length=150)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=20, blank=True)
+    username = models.CharField(_('Username'), max_length=100, unique=True)
+    email = models.CharField(_('Email Address'), max_length=150, unique=True)
+    first_name = models.CharField(_('First Name'), max_length=50)
+    last_name = models.CharField(_('Last Name'), max_length=50)
+    password = models.CharField(_('Password'), max_length=50)
+    phone = models.CharField(_('Phone Number'), max_length=20, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     objects = CustomAccountsManager()
 
@@ -81,7 +83,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         )
 
     def __str__(self):
-        return self.name
+        return self.username
 
 
 class Address(models.Model):
@@ -105,4 +107,4 @@ class Address(models.Model):
         verbose_name_plural = 'Addresses'
 
     def __str__(self):
-        return '{} Address'.format(self.first_name + ' ' + self.last_name)
+        return '{} Address'.format(self.full_name)

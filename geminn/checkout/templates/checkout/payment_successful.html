@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load mathfilters %}
+
+{% block scripts %}
+    {% static 'js/checkout.js' %}
+{% endblock %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block heading %}Checkout{% endblock %}
+
+{% block content %}
+
+    <section>
+
+    <div class="d-flex flex-column justify-content-center align-items-center mb-3 px-3 gap-5 vh-50">
+        <p class="fs-4 text-center">Payment Successful !</p>
+        <p class="fs-5 text-center">Go back to <a href="{% url 'pages:products' %}" class="text-danger fw-bold">SHOP</a></p>
+    </div>
+
+    </section>
+
+{% endblock %}

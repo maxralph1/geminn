@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load mathfilters %}
+
+{% block scripts %}
+    {% static 'js/checkout.js' %}
+{% endblock %}
+
+{% block title %}Delivery Options{% endblock %}
+
+{% block heading %}Delivery Options{% endblock %}
+
+{% block content %}
+
+    <section>
+        {% if deliveryoptions|length != 0 %}
+        <div class="mb-3 px-3">
+            <p>Choose your delivery options</p>
+        </div>
+        {% endif %}
+
+        <div>
+            {% if messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+            {% for message in messages  %}
+                {{ message|safe }}
+            {% endfor %}
+            </div>
+            {% endif %}
+            <div class="row px-3 justify-content-between">
+                {% if deliveryoptions|length == 0 %}
+                    <div class="">There are no delivery options <a href="{% url 'pages:products' %}">Shop</a>                    
+                    </div>
+                
+                {% else %}
+                    
+                    <div class="col-sm-12 col-md-7 col-lg-6">
+                    {% for option in deliveryoptions %}
+                        <div class="card mb-3 border-1 rounded product-item me-md-4" data-index="{{ option.id }}">
+                            <div class="d-flex justify-content-around align-items-center px-3 py-1">
+                                <div class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-truck mt-2"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                    </svg>
+                                </div>
+                                <div class="">
+                                    <div class="card-body p-1">
+                                    <p class="card-text ps-2 mb-1 pt-1 fw-bold">{{ option.delivery_name }}</p>
+                                    <p class="card-text ps-2 pb-3">Your order should be delivered within {{ option.delivery_timeframe }}</p>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <input class="align-middle h-100" type="radio" name="deliveryOption" id="{{ option.id }}"
+                                    value="{{ option.id }}">
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 order-md-last p-0 order-3 flex-end">
+                        <div class="d-flex bd-highlight ms-0">
+                            <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
+                            <div class="p-2 bd-highlight"><span id="sub_total"
+                                class="fw-bold h5">{{ bag.get_subtotal_price }} <span class="fw-bold h5">USD</span></span>
+                            </div>
+                        </div>
+                        <div class="d-flex bd-highlight">
+                            <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
+                            <div class="p-2 bd-highlight"><span id="delivery_price"
+                                class="fw-bold h5">{{ bag.get_delivery_price }} <span class="fw-bold h5">USD</span></span>
+                            </div>
+                        </div>
+                        <div class="d-flex bd-highlight">
+                            <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
+                            <div class="p-2 bd-highlight"><span id="total"
+                                class="fw-bold h5">{{ bag.get_total_price }} <span class="fw-bold h5">USD</span></span>
+                            </div>
+                        </div>
+                        <a role="button" href="{% url 'checkout:delivery_address' %}" class="btn btn-success fw-bold w-100"
+                        type="button">
+                            Proceed to Choose Delivery Address &nbsp;
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-house-check-fill text-white" viewBox="0 0 16 16">
+                                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
+                                <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.707l.547.547 1.17-1.951a.5.5 0 1 1 .858.514Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+    $('input[type=radio][name=deliveryOption]').on('change', function(e) {
+        e.preventDefault();
+        $.ajax({
+        type: "POST",
+        url: '{% url "checkout:bag_update_delivery" %}',
+        data: {
+            deliveryoption: $(this).val(),
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+            action: "post",
+        },
+        success: function (json) {
+            document.getElementById("total").innerHTML = json.total;
+            document.getElementById("delivery_price").innerHTML = json.delivery_price;
+        },
+        error: function (xhr, errmsg, err) {},
+        });
+        
+    });
+    </script>
+
+{% endblock %}

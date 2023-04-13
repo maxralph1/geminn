@@ -1,0 +1,155 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Addresses{% endblock %}
+
+{% block content %}
+
+<div class="px-3">
+
+    <section id="addresses" class="">
+        <div class="mb-4 border-bottom d-flex justify-content-between">
+            <h3 class="fs-4">My Addresses</h3>
+            <a href="#add-address" class="text-danger text-decoration-none mb-2">
+                Add new Address
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                </svg>
+            </a>
+        </div>
+        
+    
+        <div class="row">
+            {% for address in addresses %}
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                <div class="card">
+                    <div class="card-header bg-white text-muted">
+                    {% if address.default %}
+                        Default for Deliveries 
+                    {% endif %}
+                    &nbsp;
+                    </div>
+                    <div class="card-body small pb-1">
+                        <p class="card-text m-0 fw-bold">{{ address.full_name }}</p>
+                        <p class="card-text m-0">{{ address.address_line }}</p>
+                        <p class="card-text m-0">{{ address.address_line2 }}</p>
+                        <p class="card-text m-0">{{ address.town_city }}</p>
+                        <p class="card-text m-0">{{ address.post_code }}</p>
+                        <p class="card-text m-0">Phone number: {{ address.phone }}</p>
+                        <p class="card-text m-0">Delivery instructions: {{ address.delivery_instructions }}</p>
+                        <div class="pt-5 d-flex justify-content-end">
+                            {% if not address.default %}
+                                <a href="{% url 'accounts:set_default' address.id %}" class="text-decoration-none btn btn-success btn-sm fw-bold">Set Default</a>
+                            {% endif %}
+                            <a href="{% url 'accounts:edit_address' address.id %}" class="btn btn-warning btn-sm ms-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square text-white" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </a>
+                            <a href="{% url 'accounts:delete_address' address.id %}" class="btn btn-secondary btn-sm ms-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-footer pb-0">
+                        <p class="small text-muted text-end fst-italic">Last updated: {{ address.updated_at }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}        
+        </div>
+    </section>
+
+    <section id="add-address" class="add-addresses mt-5">
+        <div class="mb-3 border-bottom d-flex justify-content-between">
+            <h3 class="fs-4">Add New Address</h3>
+            <a href="#addresses" class="text-danger text-decoration-none mb-2">
+                Go Back to my Addresses
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="row">
+            <div>
+                <p>Add a new delivery <b>address</b> and delivery preferences.</p>
+            </div>
+            <form action="{% url 'accounts:add_address' %}" method="post" name="address_form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error: Please try again!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="full_name" class="form-label small fw-bold">{{ form.full_name.label }}</label>
+                        <div class="input-group">
+                            {{ form.full_name }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label small fw-bold">{{ form.phone.label }}</label>
+                        <div class="input-group">
+                            {{ form.phone }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="address_line_1" class="form-label small fw-bold">{{ form.address_line_1.label }}</label>
+                        <div class="input-group">
+                            {{ form.address_line_1 }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="address_line_2" class="form-label small fw-bold">{{ form.address_line_2.label }}</label>
+                        <div class="input-group">
+                            {{ form.address_line_2 }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="post_code" class="form-label small fw-bold">{{ form.post_code.label }}</label>
+                        <div class="input-group">
+                            {{ form.post_code }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="town_city" class="form-label small fw-bold">{{ form.town_city.label }}</label>
+                        <div class="input-group">
+                            {{ form.town_city }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="delivery_instructions" class="form-label small fw-bold">{{ form.delivery_instructions.label }}</label>
+                        <div class="input-group">
+                            {{ form.delivery_instructions }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-danger mb-4 mt-4 px-5 fw-bold" type="submit">
+                        Add Address
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

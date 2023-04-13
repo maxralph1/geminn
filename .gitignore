@@ -1,2 +1,4 @@
 venv
 .env
+dev_notes.txt
+db.sqlite3

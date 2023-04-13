@@ -1,0 +1,101 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Edit {{ product.title|title }} Product{% endblock %}
+
+{% block content %}
+
+    <section class="px-3">
+        <div class="mb-4 border-bottom d-flex justify-content-between">
+            <h3 class="fs-4">Edit product <span class="fw-bold">{{ product.title|title }}</span></h3>
+        </div>
+
+        <form action="{% url 'inventory:update_product' product.slug %}" method="POST">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Error: Please try again!</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="title" class="form-label small fw-bold">{{ form.title.label }}</label>
+                    <div class="input-group">
+                        {{ form.title }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="category" class="form-label small fw-bold">{{ form.category.label }}</label>
+                    <div class="input-group">
+                        {{ form.category }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="sub_category" class="form-label small fw-bold">{{ form.sub_category.label }}</label>
+                    <div class="input-group">
+                        {{ form.sub_category }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="brand" class="form-label small fw-bold">{{ form.brand.label }}</label>
+                    <div class="input-group">
+                        {{ form.brand }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="retail_price" class="form-label small fw-bold">{{ form.retail_price.label }}</label>
+                    <div class="d-flex column-gap-1">
+                        <div class="input-group">
+                            {{ form.retail_price }}
+                        </div>
+                        <div class="input-group">
+                            {{ form.retail_price_unit }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="discount" class="form-label small fw-bold">{{ form.discount.label }}</label>
+                    <div class="input-group">
+                        {{ form.discount }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="retail_price" class="form-label small fw-bold">{{ form.initial_discount_value.label }}</label>
+                    <div class="d-flex column-gap-1">
+                        <div class="input-group">
+                            {{ form.initial_discount_value }}
+                        </div>
+                        <div class="input-group">
+                            {{ form.initial_discount_value_unit }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="description" class="form-label small fw-bold">{{ form.description.label }}</label>
+                    <div class="input-group">
+                        {{ form.description }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-warning mb-4 mt-4 px-5 fw-bold" type="submit">
+                    Update Product
+                </button>
+            </div>
+            
+        </form>
+    </section>
+
+{% endblock %}

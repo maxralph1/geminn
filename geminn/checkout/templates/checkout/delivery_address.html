@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load mathfilters %}
+
+{% block scripts %}
+    {% static 'js/checkout.js' %}
+{% endblock %}
+
+{% block title %}Delivery Address{% endblock %}
+
+{% block heading %}Delivery Address{% endblock %}
+
+{% block content %}
+
+
+    <section>
+        {% if addresses|length != 0 %}
+        <div class="mb-4 px-3">
+            <p>Choose your delivery address</p>
+        </div>
+        {% endif %}
+
+        <div>
+            {% if messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+            {% for message in messages  %}
+                {{ message|safe }}
+            {% endfor %}
+            </div>
+            {% endif %}
+            <div class="row px-3 justify-content-between">
+                {% if addresses|length == 0 %}
+                    <div class="">There are no delivery addresses. <a href="{% url 'account:add_address' %}">Add an address</a></div>
+
+                {% else %}
+
+                    <div class="col-sm-12 col-md-7 col-lg-6">
+                        {% for address in addresses %}
+                            {% if not address.default %}
+                                <span class="h5 pt-4">Other Addresses</span>
+                            {% endif %}
+                                <div class="card mb-3 border-1 rounded product-item me-md-4" data-index="{{option.id}}">
+                                    <div class="row g-0">
+                                    <div class="col">
+                                        <div class="card pb-3 rounded">
+                                        <div class="card-header bg-white small">
+                                            {% if address.default %}
+                                            Default Address for Deliveries
+                                            {% endif %}
+                                            &nbsp;
+                                        </div>
+                                        <div class="card-body small pb-1">
+                                            <p class="card-text m-0 fw-bold">{{address.full_name}}</p>
+                                            <p class="card-text m-0">{{address.address_line}}</p>
+                                            <p class="card-text m-0">{{address.address_line2}}</p>
+                                            <p class="card-text m-0">{{address.town_city}}</p>
+                                            <p class="card-text m-0">{{address.post_code}}</p>
+                                            <p class="card-text m-0">Phone number: {{address.phone}}</p>
+                                            <div class="pt-3 d-flex gap-3">
+                                                <a href="{% url 'accounts:edit_address' address.id %}" class="btn btn-sm btn-warning fw-bold">Update
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                    </svg>
+                                                </a>
+                                                {% if not address.default %}
+                                                <a href="{% url 'accounts:set_default' address.id %}" class="btn btn-sm btn-success fw-bold">Set Default</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        </div>
+                                        </a>
+                                    </div>
+                                    </div>
+                                </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-4 order-md-last p-0 order-3 flex-end">
+                        <div class="d-flex bd-highlight ms-0">
+                            <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
+                            <div class="p-2 bd-highlight"><span id="sub_total"
+                                class="fw-bold h5">{{ bag.get_subtotal_price }} <span class="fw-bold h5">USD</span></span>
+                            </div>
+                        </div>
+                        <div class="d-flex bd-highlight">
+                            <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
+                            <div class="p-2 bd-highlight"><span id="delivery_price"
+                                class="fw-bold h5">{{ bag.get_delivery_price }} <span class="fw-bold h5">USD</span></span>
+                            </div>
+                        </div>
+                        <div class="d-flex bd-highlight">
+                            <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
+                            <div class="p-2 bd-highlight"><span id="total"
+                                class="fw-bold h5">{{ bag.get_total_price }} <span class="fw-bold h5">USD</span></span>
+                            </div>
+                        </div>
+                        <a role="button" href="{% url 'checkout:payment_selection' %}" class="btn btn-success fw-bold w-100"
+                        type="button">
+                            Proceed to Secure Payment &nbsp;
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-credit-card-fill text-white" viewBox="0 0 16 16">
+                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                {% endif %}
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block scripts %}
+    {% static 'js/inventory.js' %}
+{% endblock %}
+
+{% block title %}{{ product.title|title }} Product{% endblock %}
+
+{% block content %}
+    <section class="product px-3 mb-5">
+        {% if messages %}
+            {% for message in messages  %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <strong>{{ message|safe }}</strong>. 
+                    <br />
+                    <a href="#add-product-unit" class="alert-link">Add product units to this product</a>.
+                    <br />
+                    <a href="#add-product-specification" class="alert-link">Add product specifications</a>.
+                    <br />
+                    <a href="{% url 'inventory:products' %}" class="alert-link">Go back instead to — Products</a>.
+                
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="product-title mb-3 pb-0 d-flex justify-content-between">
+            <h3 class="fs-4">Product: <span class="fw-bold">{{ product.title|title }}</span></h3>
+        </div>
+
+        <div class="product-description row">
+            <h4 class="border-bottom fs-5">Description:</h4>
+            <p class="fw-bold">{{ product.description|title }}</p>
+        </div>
+
+        <div class="product-specifications row">
+            <h4 class="border-bottom fs-5">Specifications:</h4>
+            {% if product_specifications %}
+            <div class="d-flex column-gap-3 flex-wrap">
+                {% for product_specification in product_specifications %}
+                    <div class="d-flex flex-column row-gap-1">
+                        <h5>{{ product_specification.title|title }}</h5>
+                        <div class="d-flex column-gap-1">
+                            <a id="edit_product_specification_tab" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square text-warning" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </a>
+                            <a href="{% url 'inventory:delete_product_specification' product.slug product_specification.slug %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill text-secondary" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <form id="edit_product_specification_form" action="{% url 'inventory:update_product_specification' product.slug product_specification.slug %}" method="POST">
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Error: Please try again!</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                                <div class="d-flex justify-content-between row-gap-1">
+                                    <div>
+                                        {{ product_specification_form.title }} {{ specification }}
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-danger">Update</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>{{ product.title|title }} product has no product specifications yet. <a href="#add-product_specification" class="alert-link text-danger text-decoration-none">Add one&nbsp;
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </a></p>
+            {% endif %}
+        </div>  
+        
+        <div id="add-product-specification" class="product_specifications px-3 py-1 pb-0 mt-1 mb-3 rounded d-flex justify-content-between align-items-center column-gap-5">
+            <div class="d-flex align-items-center flex-wrap column-gap-1">
+                <span class="fs-6">Quickly add a new product specification to the product <span class="fw-bold">{{ product.title|title }} </span>&nbsp;</span>
+            
+                <form action="{% url 'inventory:add_product_specification' product.slug %}" method="POST">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error: Please try again!</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    <div class="input-group">
+                        {{ product_specification_form.title }}
+                        <button class="btn btn-danger fw-bold" type="submit">
+                            Add Specification
+                        </button>
+                    </div>
+                </form>
+                
+            </div>
+            
+            <a href="#" class="text-decoration-none text-danger">Go back to top&nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                </svg>
+            </a>
+        </div>
+
+    </section>
+
+    
+
+    <section class="product_units px-3 mt-4 mb-5">
+        {% if product_units %}
+            <div class="d-flex justify-content-between row-gap-3 column-gap-5 pt-1 mb-3 border-bottom">
+                <h4 class="fs-5">Product units of <span class="fw-bold">{{ product.title|title }}</span></h4>
+                <a href="#add-product-unit" class="text-end text-decoration-none text-danger">
+                    Add a new product unit to the product <span class="fw-bold">{{ product.title|title }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-square-fill text-danger" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="overflow-x-scroll">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="fw-bold">Title</th>
+                            <th scope="col" class="fw-bold">Stock Keeping Unit</th>
+                            <th scope="col" class="fw-bold">Description</th>
+                            <th scope="col" class="fw-bold">Purchase Price</th>
+                            <th scope="col" class="fw-bold">Retail Price</th>
+                            <th scope="col" class="fw-bold">Initial Discount Value</th>
+                            <th scope="col" class="fw-bold">Is Product Default?</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product_unit in product_units %}
+                            <tr>
+                                <td>{{ product_unit.title|title }}</td>
+                                <td>{{ product_unit.sku }}</td>
+                                <td>{{ product_unit.description }}</td>
+                                <td>{{ product_unit.purchase_price }} {{ product_unit.purchase_price_unit }}</td>
+                                <td>{{ product_unit.retail_price }} {{ product_unit.retail_price_unit }}</td>
+                                <td>{{ product_unit.initial_discount_value }}</td>
+                                {% if product_unit.is_product_default == False %}
+                                    <td>No <a class="btn btn-sm btn-success" href="{% url 'inventory:set_product_unit_as_default' product.slug product_unit.slug %}">Set as default</a></td>
+                                {% else %}
+                                    <td>Yes</td>
+                                {% endif %}
+                                <td>
+                                    <a href="{% url 'inventory:view_product_unit' product.slug product_unit.slug %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye-fill text-success" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'inventory:update_product_unit' product.slug product_unit.slug %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square text-warning" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{% url 'inventory:delete_product_unit' product.slug product_unit.slug %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill text-secondary" viewBox="0 0 16 16">
+                                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+
+            <div>
+                <p>{{ product.title|title }} product has no product units yet. <a href="#add-product-unit" class="alert-link text-danger text-decoration-none">Add one&nbsp;
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </a></p>
+            </div>
+
+        {% endif %}
+    </section>
+
+    <section id="add-product-unit" class="px-3 mt-5">
+        <div class="d-flex justify-content-between row-gap-3 column-gap-5 pt-1 mb-3 border-bottom">
+            <h4 class="fs-5">Add a new product unit to the product <span class="fw-bold">{{ product.title|title }}</span></h4>
+            <a href="#" class="text-end text-decoration-none text-danger">Go back to top&nbsp;
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                </svg>
+            </a>
+        </div>
+
+        <div>
+            <form action="{% url 'inventory:add_product_unit' product.slug %}" method="POST">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error: Please try again!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="title" class="form-label small fw-bold">{{ product_unit_form.title.label }}</label>
+                        <div class="input-group">
+                            {{ product_unit_form.title }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="sku" class="form-label small fw-bold">{{ product_unit_form.sku.label }}</label>
+                        <div class="input-group">
+                            {{ product_unit_form.sku }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="description" class="form-label small fw-bold">{{ product_unit_form.description.label }}</label>
+                        <div class="input-group">
+                            {{ product_unit_form.description }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="purchase_price" class="form-label small fw-bold">{{ product_unit_form.purchase_price.label }}</label>
+                        <div class="input-group">
+                            {{ product_unit_form.purchase_price }} {{ product_unit_form.purchase_price_unit }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="retail_price" class="form-label small fw-bold">{{ product_unit_form.retail_price.label }}</label>
+                        <div class="input-group">
+                            {{ product_unit_form.retail_price }} {{ product_unit_form.retail_price_unit }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="initial_discount_value" class="form-label small fw-bold">{{ product_unit_form.initial_discount_value.label }}</label>
+                        <div class="input-group">
+                            {{ product_unit_form.initial_discount_value }} {{ product_unit_form.initial_discount_value_unit }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-danger mb-4 mt-4 px-5 fw-bold" type="submit">
+                        Add Product Unit
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+        
+    </section>
+
+{% endblock %}
+

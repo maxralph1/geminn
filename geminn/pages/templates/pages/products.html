@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Products{% endblock %}
+
+{% block heading %}Our Products{% endblock %}
+
+{% block content %}
+
+    <section>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+            {% for product_unit in product_units %}
+            <article class="col">
+                <div class="card">
+                    {% for product_image in product_unit_images %}
+                        {% if product_image.product_unit == product_unit %}
+                            <img src="{{ product_image.image.url }}" class="card-img-top object-fit-cover" alt="..." style="max-height: 12rem;">
+                        {% endif %}
+                    {% endfor %} 
+
+                    <div class="card-body">
+                        <a href="{% url 'pages:product' product_unit.product.slug %}" class="text-decoration-none text-body">
+                            <h5 class="card-title">{{ product_unit.product.title }}</h5>
+                            <p class="card-text"><span class="text-decoration-none text-body">{{ product_unit.product.description }}</span></p>
+                            <p class="d-flex justify-content-end">
+                                <button id="add_to_bag" value="{{ product.id }}" href="#" class="btn btn-danger">
+                                    Add to bag
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-fill" style="color: #fff;" viewBox="0 0 16 16">
+                                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z" />
+                                    </svg>
+                                </button>
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+    </section>
+
+{% endblock %}

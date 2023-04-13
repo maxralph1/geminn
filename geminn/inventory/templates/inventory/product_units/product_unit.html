@@ -1,0 +1,433 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block styles %}
+    {% static 'css/inventory.css' %}
+{% endblock %}
+
+{% block scripts %}
+    {% static 'js/inventory.js' %}
+{% endblock %}
+
+{% block title %}{{ product_unit.title|title }} Product Unit of {{ product.title|title }}{% endblock %}
+
+{% block content %}
+    <section class="product px-3 mb-5">
+        {% if messages %}
+            {% for message in messages  %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <strong>{{ message|safe }}</strong>. 
+                    <br />
+                    <a href="#add-product-image" class="alert-link">Add product an image to this product unit</a>.
+                    <br />
+                    <a href="#add-product-specification-value" class="alert-link">Add a product specification value to a product specification of the product {{ product.title|title }}</a>.
+                    <br />
+                    <a href="{% url 'inventory:view_product' product_slug %}" class="alert-link">Go back instead to — Product instead</a>.
+                
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="product-title mb-3 pb-0 d-flex justify-content-between flex-wrap">
+            <h3 class="fs-4">Product Unit: <span class="fw-bold">{{ product_unit.title|title }}</span></h3>
+            <p class="fs-5 fw-light d-flex column-gap-2">
+                <span class="mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-badge-tm-fill" viewBox="0 0 16 16">
+                        <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm3.295 3.995V11H4.104V5.995h-1.7V5H7v.994H5.295zM8.692 7.01V11H7.633V5.001h1.209l1.71 3.894h.039l1.71-3.894H13.5V11h-1.072V7.01h-.057l-1.42 3.239h-.773L8.75 7.008h-.058z"/>
+                    </svg>
+                </span>
+                <span class="mt-1">
+                    Product Unit Stock Keeping Unit: <span class="fw-bold">{{ product_unit.sku }}</span>
+                </span>
+            </p>
+        </div>
+
+
+
+
+
+        <div class="d-flex justify-content-end px-3 mb-3 fs-6">
+            <a href="#update-features-section" class="text-decoration-none text-danger">
+                <span class="fw-light">Update features of <span class="fw-bold">{{ product_unit.title }}</span></span> &nbsp;
+                <span class="mb-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-square-fill text-danger" viewBox="0 0 16 16">
+                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </span>
+            </a>
+        </div>
+
+
+
+
+
+        <div class="product-description row">
+            <h4 class="border-bottom fs-5">Description:</h4>
+            <p class="fw-bold">{{ product_unit.description|title }}</p>
+        </div>
+
+
+
+
+        
+        <div class="product-images row mb-5">
+            <h4 class="border-bottom fs-5">Product Unit Images:</h4>
+
+
+            <div class="d-flex flex-column row-gap-5">
+                {% if product_unit_images %}
+                <div class="d-flex row-gap-3 column-gap-4 flex-wrap">
+                    {% for product_unit_image in product_unit_images %}
+                    <div class="d-flex flex-column">
+                        <div>
+                            <img src="{{ product_unit_image.image.url }}" alt="{{ product_unit_image.alt_text }}" class="object-fit-cover border rounded product-unit-images">
+                        </div>
+                        {% if product_unit_image.is_product_unit_default == True %}
+                        <div>
+                            <span href="#" class="btn btn-sm btn-secondary disabled">Is Default</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                {% else %}
+
+                <p>There are currently no images associated with this product unit.</p>
+                
+                {% endif %}
+
+            </div>
+        </div>
+
+
+
+
+        
+        <div class="product-specifications row mb-5">
+            <h4 class="border-bottom fs-5">Product/Product Unit Specifications and Values:</h4>
+
+
+            <div class="d-flex flex-column row-gap-5">
+                {% if product_specification_values %}
+                <div class="d-flex row-gap-3 column-gap-4 flex-wrap">
+                    {% for product_specification_value in product_specification_values %}
+                    <div class="d-flex flex-column">
+                        <div>
+                            <span class="fs-6 fw-light">{{ product_specification_value.product_specification|title }}</span>
+                        </div>
+                        <div>
+                            <span>{{ product_specification_value.value }}</span>
+                        </div>
+                        
+                        <div class="d-flex flex-column">
+                            <form id="edit_product_specification_form" action="{% url 'inventory:update_product_specification_value' product.slug product_unit.slug product_specification_value.product_specification.slug product_specification_value.slug %}" method="POST">
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Error: Please try again!</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                                <div class="d-flex">
+                                    <div>
+                                        {{ product_specification_value_form.value }}
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-warning text-white">Update</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% else %}
+
+                <p>There are currently no specifications associated with this product unit.</p>
+                
+                {% endif %}
+            </div>
+        </div>
+
+
+        <hr class="my-5">
+
+
+
+
+
+
+
+
+
+        <div id="update-features-section" class="bg-danger rounded d-flex justify-content-between px-3 text-white mb-3 fs-5">
+            <span class="fw-light">Update Features Section of <span class="fw-bold">{{ product_unit.title }}</span></span>
+            <span class="mb-1">
+                <a href="#" class="text-white text-decoration-none fs-6">
+                    Go back to top
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+                        <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                    </svg>
+                </a>
+                
+            </span>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        <div class="product-images row mb-5">
+            <h4 class="border-bottom fs-5">Product Unit Images:</h4>
+
+
+            <div class="d-flex flex-column row-gap-5">
+                {% if product_unit_images %}
+                <div class="d-flex row-gap-3 column-gap-4 flex-wrap">
+                    {% for product_unit_image in product_unit_images %}
+                    <div class="d-flex flex-column">
+                        <div>
+                            <span class="fs-6 fw-light">{{ product_image.alt_text|title }}</span>
+                        </div>
+                        <div>
+                            <img src="{{ product_unit_image.image.url }}" alt="{{ product_unit_image.alt_text }}" class="object-fit-cover border rounded product-unit-images">
+                        </div>
+                        
+                        <div class="d-flex column-gap-1">
+                            {% if product_unit_image.is_product_unit_default == False %}
+                                <a href="{% url 'inventory:set_default_image_for_product_unit' product.slug product_unit.slug product_unit_image.slug %}" class="btn btn-sm btn-success">
+                                    Make Default
+                                </a>
+                            {% else %}
+                                <a href="#" class="btn btn-sm disabled">Is Default</a>
+                            {% endif %}
+                            <a id="edit_image_tab" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square text-warning" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </a>
+                            <a href="{% url 'inventory:delete_product_unit_image' product.slug product_unit.slug product_unit_image.slug %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill text-secondary" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <form id="edit_image_form" action="{% url 'inventory:update_product_unit_image' product.slug product_unit.slug product_unit_image.slug %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Error: Please try again!</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                                <div class="d-flex">
+                                    <div>
+                                        {{ product_image_form.image }}
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-warning text-white">Update</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                {% else %}
+
+                <p>There are currently no images associated with this product unit.</p>
+                
+                {% endif %}
+
+                <div class="d-flex align-items-center flex-wrap column-gap-1">
+                    <span class="fs-6 fw-light">Quickly add a new image to the product unit <span class="fw-bold">{{ product_unit.title|title }} <span class="fw-light">of</span> {{ product_unit.product.title }} </span>&nbsp;</span>
+
+                    <form id="add_image_form" action="{% url 'inventory:add_product_unit_image' product.slug product_unit.slug %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if form.errors %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Error: Please try again!</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                        <div class="input-group">
+                            {{ product_image_form.image }}
+                            <button class="btn btn-danger fw-bold" type="submit">
+                                Add Image
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+        
+        <div class="product-specifications row mb-5">
+            <h4 class="border-bottom fs-5">Product/Product Unit Specifications and Values:</h4>
+
+
+            <div class="d-flex flex-column row-gap-5">
+                {% if product_specification_values %}
+                <div class="d-flex align-items-center column-gap-4 flex-wrap">
+                    <div>
+                        <span class="fs-6 fw-light">Quickly update existing values to the product specifications</span>
+                    </div>
+                    {% for product_specification_value in product_specification_values %}
+                    <div class="d-flex flex-column">
+                        <div>
+                            <span class="fs-6 fw-light">{{ product_specification_value.product_specification|title }}</span>
+                        </div>
+                        <div>
+                            <span>{{ product_specification_value.value }}</span>
+                        </div>
+                        
+                        <div class="d-flex column-gap-1">
+                            <a id="edit_product_specification_tab" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square text-warning" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </a>
+                            <a href="{% url 'inventory:delete_product_specification_value' product.slug product_unit.slug product_specification_value.product_specification.slug product_specification_value.slug %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill text-secondary" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <form id="edit_product_specification_form" action="{% url 'inventory:update_product_specification_value' product.slug product_unit.slug product_specification_value.product_specification.slug product_specification_value.slug %}" method="POST">
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Error: Please try again!</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                                <div class="d-flex">
+                                    <div>
+                                        {{ product_specification_value_form.value }}
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-warning text-white">Update</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% else %}
+
+                    <span>There are currently no specifications associated with this product unit.</span>
+                
+                {% endif %}
+
+
+                {% if product_specifications %}
+                <div class="d-flex align-items-center column-gap-4 flex-wrap">
+                    <div>
+                        <span class="fs-6 fw-light">Quickly add new values to the product specifications</span>
+                    </div>
+                    {% for product_specification in product_specifications %}
+                    <div class="d-flex flex-column">
+                        <div>
+                            <span class="fs-6 fw-light">{{ product_specification.title|title }}</span>
+                        </div>
+                        
+                        <div class="d-flex column-gap-1">
+                            <a id="add_product_specification_tab" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square text-warning" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            </a>
+                            <a href="{% url 'inventory:delete_product_specification' product.slug product_specification.slug %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash-fill text-secondary" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <form id="add_product_specification_form" action="{% url 'inventory:add_product_specification_value' product.slug product_unit.slug product_specification.slug %}" method="POST">
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>Error: Please try again!</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                                <div class="d-flex">
+                                    <div>
+                                        {{ product_specification_value_form.value }}
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-danger">Add</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% else %}
+
+                    <span class="fs-6 text-dark">There are currently no specifications associated with the product <span class="fw-bold">{{ product.title|title }}</span>. <span><a href="{% url 'inventory:view_product' product.slug %}#add-product-specification" class="text-decoration-none">
+                                <span class="fs-6 fw-light text-dark">Add one &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill text-danger" viewBox="0 0 16 16">
+                                        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                                    </svg>
+                                </span>
+                            </a></span>
+                    </span>
+                
+                {% endif %}
+
+
+
+                <div id="add-product-specification" class="">
+                    <div class="py-1 pb-0 rounded d-flex justify-content-between">
+                        <a href="{% url 'inventory:view_product' product.slug %}#add-product-specification" class="text-decoration-none">
+                            <span class="fs-6 fw-light text-dark">Don't have the product specification you want? Add a new product specification to the product <span class="fw-bold">{{ product.title|title }}</span> &nbsp;
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill text-danger" viewBox="0 0 16 16">
+                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </span>
+                        </a>
+                        
+                        <a href="#" class="text-decoration-none text-danger">Go back to top&nbsp;
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-square-fill text-danger" viewBox="0 0 16 16">
+                                <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+
+    
+
+{% endblock %}
+
