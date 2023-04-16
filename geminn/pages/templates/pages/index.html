@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block styles %}
+    https://use.fontawesome.com/releases/v5.10.2/css/all.css
+{% endblock %}
+
 {% block content %}
     <section class="row align-items-center my-5">
         <div class="col-md-5">
@@ -105,5 +109,53 @@
             </article>
         </div>
 
+    </section>
+
+
+    <section class="reviews mt-5">
+        <h3 class="fs-4 border-bottom">Some Customer Reviews</h3>
+        <div class="reviews mt-3">
+            {% for review in product_reviews %}
+                <div class="d-flex flex-column gap-0 fw-light border-bottom mb-2">
+                    {% if review.get_stars_display == 'Very poor' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Poor' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Average' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Good' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Very good' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% endif %}
+
+                    <span class="fw-bold">{{ review.title }}</span>
+                    <span>{{ review.content }}</span>
+                    
+                    <span class="text-end fst-italic fs-6 mb-0">by {{ review.added_by.first_name }} {{ review.added_by.last_name }}</span>
+                    <span class="text-end fst-italic fs-6">{{ review.created_at }}</span>
+                </div>
+            {% endfor %}
+        </div>
     </section>
 {% endblock %}

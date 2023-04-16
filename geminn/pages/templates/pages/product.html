@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block styles %}
+    https://use.fontawesome.com/releases/v5.10.2/css/all.css
+{% endblock %}
+
 {% block scripts %}
     {% static 'js/pages.js' %}
 {% endblock %}
@@ -128,9 +132,139 @@
 
     </section>
 
-    <section class="reviews">
-        <div>
+    <section class="reviews mt-5">
+           
+        <div class="mb-3 border-bottom d-flex justify-content-between">
+            <h3 class="fs-4">Reviews</h3>
+            <a href="#add-review" id="toggle-review-input" class="text-danger text-decoration-none mb-2">
+                Add a quick review
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                </svg>
+            </a>
+        </div>
 
+        <div id="add-review" class="add-review">
+            <form action="{% url 'inventory:add_product_review' product.slug %}" method="POST">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error: Please try again!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex justify-content-end align-items-center">
+                    <div>
+                        <span>Star-rate this product: </span>
+                    </div>
+                    <div class="star-rating">
+                        <div class="star-input">
+                            <input type="radio" name="rating" id="rating-5" value="5">
+                            <label for="rating-5" class="fas fa-star">
+                            </label>
+
+                            <input type="radio" name="rating" id="rating-4" value="4">
+                            <label for="rating-4" class="fas fa-star">
+                            </label>
+
+                            <input type="radio" name="rating" id="rating-3" value="3">
+                            <label for="rating-3" class="fas fa-star">   
+                            </label>
+
+                            <input type="radio" name="rating" id="rating-2" value="2">
+                            <label for="rating-2" class="fas fa-star">     
+                            </label>
+
+                            <input type="radio" name="rating" id="rating-1" value="1">
+                            <label for="rating-1" class="fas fa-star">    
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <label for="title" class="form-label small fw-bold">{{ product_review_form.title.label }}</label>
+                        <div class="input-group">
+                            {{ product_review_form.title }}
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-8">
+                        <label for="content" class="form-label small fw-bold">{{ product_review_form.content.label }}</label>
+                        <div class="input-group">
+                            {{ product_review_form.content }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <label for="title" class="form-label small fw-bold">Review Title</label>
+                        <div class="input-group">
+
+                            <input type="text" name="title" id="title" class="form-control" placeholder="Review Title">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-8">
+                        <label for="content" class="form-label small fw-bold">Review Description</label>
+                        <div class="input-group">
+                            <input type="text" name="content" id="content" class="form-control" placeholder="Review Content">
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-sm btn-danger mb-4 mt-4 px-2 fw-bold" type="submit">
+                        Add Review
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+
+        <div class="reviews mt-3">
+            {% for review in product_reviews %}
+                <div class="d-flex flex-column gap-0 fw-light border-bottom mb-2">
+                    {% if review.get_stars_display == 'Very poor' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Poor' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Average' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Good' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% elif review.get_stars_display == 'Very good' %}
+                        <div class="d-flex text-danger">
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                            <span class="fas fa-star"></span>
+                        </div>
+                    {% endif %}
+
+                    <span class="fw-bold">{{ review.title }}</span>
+                    <span>{{ review.content }}</span>
+                    
+                    <span class="text-end fst-italic mb-0">by {{ review.added_by.first_name }} {{ review.added_by.last_name }}</span>
+                    <span class="text-end fst-italic">{{ review.created_at }}</span>
+                </div>
+            {% endfor %}
         </div>
     </section>
 

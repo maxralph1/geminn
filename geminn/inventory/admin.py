@@ -44,3 +44,6 @@ class ProductUnitAdmin(admin.ModelAdmin):
         ProductUnitImageInline,
         ProductSpecificationValueInline,
     ]
+
+
+admin.site.register(ProductReview)

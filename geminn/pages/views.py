@@ -1,14 +1,22 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from inventory.models import Product, ProductUnit, ProductUnitImage, ProductSpecification, ProductSpecificationValue, Category, SubCategory
+from inventory.models import Product, ProductUnit, ProductUnitImage, ProductSpecification, ProductSpecificationValue, Category, SubCategory, ProductReview
+
+from inventory.forms import ProductReviewForm
 
 
 def index(request):
     product_units = ProductUnit.objects.prefetch_related(
         'product_unit_image').filter(is_active=True).order_by('?')[:1]
 
-    return render(request, 'pages/index.html', {'product_units': product_units})
+    product_reviews = ProductReview.objects.filter(
+        is_active=True).order_by('?')[:10]
+
+    return render(request, 'pages/index.html', {
+        'product_units': product_units,
+        'product_reviews': product_reviews
+    })
 
 
 def categories(request):
@@ -89,13 +97,20 @@ def product(request, product_slug):
     product_unit_image_default_for_product = ProductUnitImage.objects.filter(
         product__slug=product_slug, is_active=True).order_by('-is_product_unit_default').first()
 
+    product_reviews = ProductReview.objects.filter(product__slug=product_slug, is_active=True).order_by(
+        '-updated_at')
+
+    product_review_form = ProductReviewForm()
+
     return render(request, 'pages/product.html', {
         'product': product,
         'product_unit_count': product_unit_count,
         'product_specifications': product_specifications,
         'product_unit_images': product_unit_images,
         'product_unit_image_default_for_product': product_unit_image_default_for_product,
-        'related_product_specification_values': related_product_specification_values
+        'related_product_specification_values': related_product_specification_values,
+        'product_reviews': product_reviews,
+        'product_review_form': product_review_form
     })
 
 

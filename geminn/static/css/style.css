@@ -69,4 +69,44 @@ body {
 }
 
 
+/* Product Page Rating */
 
+/* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: arial;
+} */
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating {
+  /* margin: 50px auto; */
+  display: table;
+  width: 30px;
+}
+
+.star-input {
+	display: flex;
+	justify-content: end;
+	gap: 1;
+	flex-direction: row-reverse;
+}
+
+.star-rating label {
+  padding: 10px;
+  float: right;
+  font-size: 20px;
+  color: #eee;
+}
+
+.star-rating input:not(:checked)~label:hover,
+.star-rating input:not(:checked)~label:hover~label {
+  color: #ffc107;
+}
+
+.star-rating input:checked~label:before {
+  color: red !important;
+}

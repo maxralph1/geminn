@@ -1,3 +1,11 @@
+let toggleReviewInput = document.getElementById('toggle-review-input');
+let addReview = document.getElementById('add-review');
+
+window.addEventListener('load', (e) => {
+    e.preventDefault()
+    addReview.classList.add('d-none');
+});
+
 // for product image gallery
 
 function switchImage(img) {
@@ -6,6 +14,28 @@ function switchImage(img) {
     setImage.alt = img.alt;
     setImage.parentElement.style.display = 'block';
 }
+
+
+// for the add and remove from cart button toggle
+
+
+
+// document.addEventListener('DOMContentLoaded', (e) => {
+//     e.preventDefault()
+//     removeFromBag.classList.add('d-none');
+// });
+
+toggleReviewInput.addEventListener('click', (e) => {
+    e.preventDefault()
+    addReview.classList.toggle('d-none')
+    // addToBag.classList.add('d-none')
+})
+
+// removeFromBag.addEventListener('click', (e) => {
+//     e.preventDefault()
+//     addToBag.classList.remove('d-none')
+//     removeFromBag.classList.add('d-none')
+// })
 
 
 // // for the add and remove from cart button toggle

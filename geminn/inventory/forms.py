@@ -402,7 +402,7 @@ class ProductUnitImageForm(forms.ModelForm):
 class ProductReviewForm(forms.ModelForm):
     class Meta:
         model = ProductReview
-        fields = ['title', 'content', 'stars']
+        fields = ['title', 'content']
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -412,9 +412,9 @@ class ProductReviewForm(forms.ModelForm):
         content = self.cleaned_data['content']
         return content
 
-    def clean_stars(self):
-        stars = self.cleaned_data['stars']
-        return stars
+    # def clean_stars(self):
+    #     stars = self.cleaned_data['stars']
+    #     return stars
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -426,7 +426,7 @@ class ProductReviewForm(forms.ModelForm):
             {'type': 'text', 'name': 'content', 'id': 'content',
                 'class': 'form-control', 'placeholder': 'Content'}
         )
-        self.fields['stars'].widget.attrs.update(
-            {'type': 'text', 'name': 'stars', 'id': 'stars',
-                'class': 'form-control', 'placeholder': 'Stars'}
-        )
+        # self.fields['stars'].widget.attrs.update(
+        #     {'type': 'text', 'name': 'stars', 'id': 'stars',
+        #         'class': 'form-control', 'placeholder': 'Stars'}
+        # )
