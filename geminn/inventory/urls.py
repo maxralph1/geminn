@@ -5,8 +5,7 @@ from . import views
 app_name = 'inventory'
 
 urlpatterns = [
-    # General Application Home
-    path('', views.home, name='home'),
+    #     path('', views.home, name='home'),
 
     # Brands
     path('brands/', views.brands, name='brands'),

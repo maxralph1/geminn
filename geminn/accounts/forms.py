@@ -159,27 +159,41 @@ class PasswordResetConfirmForm(SetPasswordForm):
 
 
 class UserEditForm(forms.ModelForm):
-    username = forms.CharField(
-        label='Account username (cannot be changed)', max_length=100, widget=forms.TextInput(
-            attrs={'class': '', 'placeholder': 'username',
-                   'id': 'username', 'readonly': 'readonly'}
-        )
-    )
-    email = forms.EmailField(label='email', min_length=2, max_length=100, widget=forms.TextInput(
-        attrs={'class': '', 'placeholder': 'email', 'id': 'email'}
-    ))
-    first_name = forms.CharField(label='First name', min_length=2, max_length=100, widget=forms.TextInput(
-        attrs={'class': '', 'placeholder': 'first_name', 'id': 'first_name'}
-    ))
-    last_name = forms.CharField(label='Last name', min_length=2, max_length=100, widget=forms.TextInput(
-        attrs={'class': '', 'placeholder': 'last_name', 'id': 'last_name'}
-    ))
-
     class Meta:
         model = UserModel
-        fields = ('username', 'email', 'first_name', 'last_name')
+        fields = ['username', 'email', 'first_name', 'last_name']
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        return email
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data['first_name']
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data['last_name']
+        return last_name
 
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
-        self.fields['username'].required = True
-        self.fields['email'].required = True
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update(
+            {'type': 'text', 'name': 'username', 'id': 'username',
+                'class': 'form-control', 'placeholder': 'Username', 'required': 'required', 'readonly': 'readonly'}
+        )
+        self.fields['email'].widget.attrs.update(
+            {'type': 'email', 'name': 'email', 'id': 'email',
+                'class': 'form-control', 'placeholder': 'Email', 'required': 'required'}
+        )
+        self.fields['first_name'].widget.attrs.update(
+            {'type': 'text', 'name': 'first_name', 'id': 'first_name',
+                'class': 'form-control', 'placeholder': 'First_name', 'required': 'required'}
+        )
+        self.fields['last_name'].widget.attrs.update(
+            {'type': 'text', 'name': 'last_name', 'id': 'last_name',
+                'class': 'form-control', 'placeholder': 'Last_name', 'required': 'required'}
+        )

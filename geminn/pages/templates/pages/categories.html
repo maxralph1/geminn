@@ -3,47 +3,42 @@
 
 {% block title %}Categories{% endblock %}
 
-{% block heading %}Our Product Categories{% endblock %}
+{% block heading %}Our Products' Categories{% endblock %}
 
 {% block content %}
     <section>
         <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+            {% for category in categories %}
             <article class="col">
-                <div class="card">
-                    <img src="/images/bridget-flohe.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Engagement bands</h5>
-                        <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum fugit sit, magnam porro omnis fugiat beatae dignissimos. Qui veniam tempora animi quibusdam laborum nisi perspiciatis, numquam et, iure accusamus maiores...</p>
+                
+                    <div class="card text-dark">
+                        <!-- <img src="/images/bridget-flohe.jpg" class="card-img-top" alt="..."> -->
+                        <a href="{% url 'pages:category' category.slug %}" class="text-danger">
+                            <div class="card-body">
+                            
+                                <h5 class="card-title">{{ category.title }}</h5>
+                                <p class="card-text">{{ category.description }}</p>
+                            
+                            </div>
+                        </a>
+                        <div class="card-footer">
+                           
+                            <div class="d-flex gap-1">
+                                <span class="fw-bold">{{ category.title }}'s Sub-Categories: </span>
+                                {% for sub_category in sub_categories %}
+                                    {% if sub_category.category == category %}
+                                        <a href="{% url 'pages:sub_category' sub_category.slug %}" class="text-danger">{{ sub_category.title }}</a> |
+                                    {% endif %}
+                                {% endfor %}
+                                
+                            </div>
+                            
+                        </div>
                     </div>
-                </div>
+                
+                
             </article>
-            <article class="col">
-                <div class="card">
-                    <img src="/images/coppertist-1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Ear rings</h5>
-                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi rem eligendi ab delectus illo, cum fugit doloremque sed deleniti dolor asperiores provident nisi impedit voluptatum distinctio ipsum magnam dolores nobis.</p>
-                    </div>
-                </div>
-            </article>
-            <article class="col">
-                <div class="card">
-                    <img src="/images/gary-yost.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Fashion rings</h5>
-                        <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Alias quaerat illo ullam repellat, quisquam cumque libero, debitis reprehenderit ipsum natus optio numquam, voluptatum similique suscipit ab dicta neque at rerum!</p>
-                    </div>
-                </div>
-            </article>
-            <article class="col">
-                <div class="card">
-                    <img src="/images/simran-sood.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Wrist bands</h5>
-                        <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, facilis quia in architecto ipsa dolore totam eveniet officia dolorum aut similique consequuntur, necessitatibus itaque dolorem ex doloribus consectetur earum? Ullam!</p>
-                    </div>
-                </div>
-            </article>
+            {% endfor %}
         </div>
 
     </section>

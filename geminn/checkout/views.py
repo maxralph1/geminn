@@ -1,4 +1,3 @@
-from .paypal import PayPalClient
 from paypalcheckoutsdk.orders import OrdersGetRequest
 import json
 
@@ -11,6 +10,7 @@ from bag.bag import Bag
 from orders.models import Order, OrderItem
 
 from .models import DeliveryOptions
+from .paypal import PayPalClient
 
 
 @login_required
@@ -73,10 +73,7 @@ def payment_selection(request):
     return render(request, "checkout/payment_selection.html", {})
 
 
-####
-# PayPay
-####
-
+# PayPal
 
 @login_required
 def payment_complete(request):
@@ -89,7 +86,7 @@ def payment_complete(request):
     requestorder = OrdersGetRequest(data)
     response = PPClient.client.execute(requestorder)
 
-    # total_paid = response.result.purchase_units[0].amount.value
+    total_paid = response.result.purchase_units[0].amount.value
 
     bag = bag(request)
     order = Order.objects.create(

@@ -168,7 +168,8 @@ class SubCategory(models.Model):
         help_text=_('Required and unique'),
         max_length=255,
     )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name='category')
     added_by = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     is_active = models.BooleanField(
         verbose_name=_('Sub-category visibility'),

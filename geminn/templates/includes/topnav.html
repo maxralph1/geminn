@@ -78,9 +78,8 @@
     </nav>
 
     <div class="search-bar position-fixed">
-        <form role="search" action="../search.php">
-            <input class="text-danger" type="search" placeholder="Search for products ..." aria-label="Search">
-            <!-- <img src="/images/search.svg" alt=""> -->
+        <form role="search" action="{% url 'pages:lookup' %}" method="GET">
+            <input name="search" class="text-danger" type="search" placeholder="Search for products ..." aria-label="Search">
         </form>
     </div>
 

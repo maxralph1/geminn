@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Our Products{% endblock %}
+{% block title %}{{ category.title|title }}{% endblock %}
 
-{% block heading %}Our Products{% endblock %}
+{% block heading %}<span class="fw-light">Category</span>: <span class="fw-bold">{{ category.title }}</span>{% endblock %}
 
 {% block content %}
 
@@ -19,19 +19,19 @@
             {% endif %}
         </div>
         <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
-            {% for product_unit in product_units %}
+            {% for product in products_belonging_to_category %}
             <article class="col">
                 <div class="card">
                     {% for product_image in product_unit_images %}
-                        {% if product_image.product_unit == product_unit %}
-                            <img src="{{ product_image.image.url }}" class="card-img-top object-fit-cover" alt="..." style="max-height: 12rem;">
+                        {% if product_image.product == product %}
+                            <img src="{{ product_image.image.url }}" class="card-img-top object-fit-cover" alt="{{ product.title }}" style="max-height: 12rem;">
                         {% endif %}
                     {% endfor %} 
 
                     <div class="card-body">
-                        <a href="{% url 'pages:product' product_unit.product.slug %}" class="text-decoration-none text-body">
-                            <h5 class="card-title">{{ product_unit.product.title }}</h5>
-                            <p class="card-text"><span class="text-decoration-none text-body">{{ product_unit.product.description }}</span></p>
+                        <a href="{% url 'pages:product' product.slug %}" class="text-decoration-none text-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text"><span class="text-decoration-none text-body">{{ product.description }}</span></p>
                             <p class="d-flex justify-content-end gap-2">
                                 <button id="add_to_bag" value="{{ product.id }}" href="#" class="btn btn-danger">
                                     <span class="fw-bold">Bag Choices</span>
@@ -40,7 +40,7 @@
                                     </svg>
                                 </button>
 
-                                <a id="update_favorite" value="{{ product.id }}" href="{% url 'accounts:update_favorite' product_unit.product.id %}" class="btn btn-warning">
+                                <a id="update_favorite" value="{{ product.id }}" href="{% url 'accounts:update_favorite' product.id %}" class="btn btn-warning">
                                     <span class="fw-bold">Add/Remove favorite</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-fill text-dark" viewBox="0 0 16 16">
                                         <path d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5ZM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1Zm0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z"/>

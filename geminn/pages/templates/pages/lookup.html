@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Our Products{% endblock %}
+{% block title %}Products Search{% endblock %}
 
-{% block heading %}Our Products{% endblock %}
+{% block heading %}Products Search: <span class="fw-bold">{{ query }}</span>{% endblock %}
 
 {% block content %}
 
@@ -18,7 +18,13 @@
                 {% endfor %}
             {% endif %}
         </div>
+        {% if products_count < 1 %}
+
+            <div class="text-center mt-3 fs-4">No products match your search key. Try another search combination; or go to our <a href="{% url 'pages:products' %}" class="text-danger">products page</a> to view what we have in stock</div>
+
+        {% else %}
         <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+            
             {% for product_unit in product_units %}
             <article class="col">
                 <div class="card">
@@ -52,7 +58,9 @@
                 </div>
             </article>
             {% endfor %}
+        
         </div>
+        {% endif %}
 
     </section>
 

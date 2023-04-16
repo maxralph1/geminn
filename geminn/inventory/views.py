@@ -12,10 +12,10 @@ from .models import Brand, Discount, Category, SubCategory, Product, ProductUnit
 from .forms import BrandForm, DiscountForm, CategoryForm, SubCategoryForm, ProductForm, ProductUnitForm, ProductSpecificationForm, ProductSpecificationValueForm, ProductUnitImageForm, ProductReviewForm
 
 
-def home(request):
-    products = Product.objects.prefetch_related(
-        'product_image').filter(is_active=True)
-    return render(request, 'inventory/index.html', {'products': products})
+# def home(request):
+#     products = Product.objects.prefetch_related(
+#         'product_image').filter(is_active=True)
+#     return render(request, 'inventory/index.html', {'products': products})
 
 
 # Brands
@@ -764,3 +764,44 @@ def delete_product_unit_image(request, product_slug, product_unit_slug, product_
     product_unit_image.save()
     messages.success(request, 'Product Unit Image removed')
     return redirect('inventory:view_product_unit', product_slug, product_unit_slug)
+
+
+@login_required
+def add_product_review(request, product_slug):
+    product = Product.objects.get(slug=product_slug)
+    product_review_exists = ProductReview.objects.filter(
+        product__slug=product_slug, user__id=request.user_id, is_active=True).exists()
+
+    if product_review_exists:
+        messages.warning(request, product.title +
+                         ' could not be added. You already have an existing review of this product. You could try updating the previous review.')
+    else:
+        if request.method == 'POST':
+            product_review_form = ProductReviewForm(request.POST)
+
+            if product_review_form.is_valid():
+                product_review = product_review_form.save(commit=False)
+                product_review.title = product_review_form.cleaned_data['title']
+                product_review.slug = slugify(
+                    product_review.title + product, allow_unicode=False)
+                product_review.content = product_review_form.cleaned_data['content']
+                product_review.stars = product_review_form.cleaned_data['stars']
+                product_review.product = product
+                product_review.added_by = request.user
+
+                product_review.save()
+
+                messages.success(
+                    request, product_review.title + ' added')
+                # return redirect('inventory:view_product', product_slug)
+            else:
+                return HttpResponse('Error handler content', status=400)
+        else:
+            product_review_form = ProductReviewForm()
+    # else:
+    #     messages.warning(request, product.title +
+    #                      ' could not be added. A product must not exceed 10 specifications.')
+    #     return redirect('inventory:view_product', product.slug)
+        # product_review_form = ProductReviewForm()
+
+    return render(request, 'pages/product.html', {'product': product, 'product_review_form': product_review_form})

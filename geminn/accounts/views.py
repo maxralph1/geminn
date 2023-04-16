@@ -17,61 +17,11 @@ from orders.views import user_orders
 
 from .forms import UserRegistrationForm, CustomPasswordResetForm, UserAddressForm, UserEditForm
 from .models import Address, UserModel
+from inventory.models import ProductUnitImage
 from .tokens import account_activation_token, password_reset_token
 
 
-# User
-
-@login_required
-def favorites(request):
-    products = Product.objects.filter(users_favorite=request.user)
-    return render(request, 'accounts/users/user_favorites.html', {'favorites': products})
-
-
-@login_required
-def add_to_favorites(request, id):
-    product = get_object_or_404(Product, id=id)
-    if product.users_favorite.filter(id=request.user.id).exists():
-        product.users_favorite.remove(request.user)
-        messages.success(request, product.title +
-                         ' has been removed from your favorites')
-    else:
-        product.users_favorite.add(request.user)
-        messages.success(request, 'Added ' +
-                         product.title + ' to your favorites')
-    return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-
-@login_required
-def dashboard(request):
-    orders = user_orders(request)
-    return render(request, 'accounts/dashboard/index.html', {
-        'orders': orders
-    })
-
-
-@login_required
-def edit_details(request):
-    if request.method == 'POST':
-        user_form = UserEditForm(instance=request.user, data=request.POST)
-
-        if user_form.is_valid():
-            user_form.save()
-    else:
-        user_form = UserEditForm(instance=request.user)
-
-    return render(request, 'accounts/users/edit.html', {'user_form': user_form})
-
-
-@login_required
-def delete_user(request):
-    user = UserModel.objects.get(user_name=request.user)
-    user.is_active = False
-    user.deleted_at = datetime.now()
-    user.save()
-    logout(request)
-    return redirect('accounts:delete_confirmation')
-
+# User Auth
 
 def account_register(request):
     if request.user.is_authenticated:
@@ -181,7 +131,33 @@ def password_edit(request, user):
     return render(request, 'accounts/dashboard/edit_users.html', {'form': user_form})
 
 
-# Address
+# User Profile
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UserEditForm(instance=request.user, data=request.POST)
+
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'User Profile updated.')
+    else:
+        user_form = UserEditForm(instance=request.user)
+
+    return render(request, 'accounts/users/edit.html', {'user_form': user_form})
+
+
+# User Dashboard
+
+@login_required
+def dashboard(request):
+    orders = user_orders(request)
+    return render(request, 'accounts/dashboard/index.html', {
+        'orders': orders
+    })
+
+
+# User Addresses
 
 @login_required
 def view_address(request):
@@ -256,3 +232,30 @@ def user_orders(request):
     user_id = request.user.id
     orders = Order.objects.filter(user_id=user_id).filter(billing_status=True)
     return render(request, 'accounts/users/user_orders.html', {'orders': orders})
+
+
+# User Favorites
+
+@login_required
+def user_favorites(request):
+    favorites = Product.objects.filter(users_favorite=request.user)
+
+    product_unit_images = ProductUnitImage.objects.filter(
+        is_product_unit_default=True, is_active=True)
+
+    return render(request, 'accounts/users/user_favorites.html', {'favorites': favorites, 'product_unit_images': product_unit_images})
+
+
+@login_required
+def update_favorite(request, id):
+    product = get_object_or_404(Product, id=id)
+
+    if product.users_favorite.filter(id=request.user.id).exists():
+        product.users_favorite.remove(request.user)
+        messages.warning(request, product.title +
+                         ' has been removed from your favorites')
+    else:
+        product.users_favorite.add(request.user)
+        messages.success(request, 'Added ' +
+                         product.title + ' to your favorites')
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])

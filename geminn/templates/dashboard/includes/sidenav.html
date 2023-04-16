@@ -8,9 +8,15 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#">
+                <a class="nav-link text-dark" href="{% url 'accounts:user_orders' %}">
                     <span class="align-text-bottom"></span>
                     Orders
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{% url 'accounts:user_favorites' %}">
+                    <span class="align-text-bottom"></span>
+                    Favorites
                 </a>
             </li>
             <li class="nav-item">
@@ -32,18 +38,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#">
-                    <span class="align-text-bottom"></span>
-                    Customers
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="#">
-                    <span class="align-text-bottom"></span>
-                    Payments
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link text-dark" href="{% url 'inventory:brands' %}">
                     <span class="align-text-bottom"></span>
                     Brands
@@ -53,6 +47,12 @@
                 <a class="nav-link text-dark" href="{% url 'inventory:discounts' %}">
                     <span class="align-text-bottom"></span>
                     Discounts
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{% url 'accounts:update_profile' %}">
+                    <span class="align-text-bottom"></span>
+                    User Profile
                 </a>
             </li>
         </ul>

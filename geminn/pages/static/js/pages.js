@@ -8,28 +8,28 @@ function switchImage(img) {
 }
 
 
-// for the add and remove from cart button toggle
+// // for the add and remove from cart button toggle
 
-let addToBag = document.getElementById('add_to_bag');
-let removeFromBag = document.getElementById('remove_from_bag');
+// let addToBag = document.getElementById('add_to_bag');
+// let removeFromBag = document.getElementById('remove_from_bag');
 
-// document.addEventListener('DOMContentLoaded', (e) => {
+// // document.addEventListener('DOMContentLoaded', (e) => {
+// //     e.preventDefault()
+// //     removeFromBag.classList.add('d-none');
+// // });
+
+// addToBag.addEventListener('click', (e) => {
 //     e.preventDefault()
-//     removeFromBag.classList.add('d-none');
-// });
+//     removeFromBag.classList.remove('d-none')
+//     // removeFromBag.style.display = "block";
+//     addToBag.classList.add('d-none')
+//     // addToBag.style.display = "none";
+// })
 
-addToBag.addEventListener('click', (e) => {
-    e.preventDefault()
-    removeFromBag.classList.remove('d-none')
-    // removeFromBag.style.display = "block";
-    addToBag.classList.add('d-none')
-    // addToBag.style.display = "none";
-})
-
-removeFromBag.addEventListener('click', (e) => {
-    e.preventDefault()
-    addToBag.classList.remove('d-none')
-    // addToBag.style.display = "block";
-    removeFromBag.classList.add('d-none')
-    // removeFromBag.style.display = "none";
-})
+// removeFromBag.addEventListener('click', (e) => {
+//     e.preventDefault()
+//     addToBag.classList.remove('d-none')
+//     // addToBag.style.display = "block";
+//     removeFromBag.classList.add('d-none')
+//     // removeFromBag.style.display = "none";
+// })

@@ -1,0 +1,115 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+
+<div class="px-3">
+
+    <section id="my-profile" class="">
+        <div class="mb-4 border-bottom d-flex justify-content-between">
+            <h3 class="fs-4">My Profile</h3>
+            <a href="#update-profile" class="text-danger text-decoration-none mb-2">
+                Update Profile
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5a.5.5 0 0 1 1 0z"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div>
+            {% if messages %}
+                {% for message in messages  %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <strong>{{ message|safe }}</strong>.                 
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    
+        <div class="row" id="profile">
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+                <div class="card">
+                    <div class="card-body small pb-1">
+                        <p class="card-text m-0" disabled>{{ request.user.username }}</p>
+                        <p class="card-text m-0 fw-bold">Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+                        <p class="card-text m-0">{{ request.user.email }}</p>
+                        <p class="card-text m-0">{{ request.user.password }}</p>
+                    </div>
+                    <div class="card-footer pb-0">
+                        <p class="small text-muted text-end fst-italic">Last updated: {{ request.user.updated_at }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="update-profile" class="update-profile mt-5">
+        <div class="mb-3 border-bottom d-flex justify-content-between">
+            <h3 class="fs-4">Update Profile</h3>
+            <a href="#profile" class="text-danger text-decoration-none mb-2">
+                Go Back to my Profile
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-square-fill text-danger" viewBox="0 0 16 16">
+                    <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="row">
+            <div>
+                <p>Update User Profile</p>
+            </div>
+            <form action="{% url 'accounts:update_profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error: Please try again!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label small fw-bold">{{ user_form.username.label }}</label>
+                        <div class="input-group">
+                            {{ user_form.username }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label small fw-bold">{{ user_form.email.label }}</label>
+                        <div class="input-group">
+                            {{ user_form.email }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label small fw-bold">{{ user_form.first_name.label }}</label>
+                        <div class="input-group">
+                            {{ user_form.first_name }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label small fw-bold">{{ user_form.last_name.label }}</label>
+                        <div class="input-group">
+                            {{ user_form.last_name }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-warning mb-4 mt-4 px-5 fw-bold" type="submit">
+                        Update User Profile
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

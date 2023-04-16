@@ -7,8 +7,11 @@ from .forms import PasswordResetConfirmForm, CustomPasswordResetForm, UserLoginF
 
 app_name = 'accounts'
 
+
+# User Auth
 urlpatterns = [
     path('login/', auth_views.LoginView.as_view(
+        redirect_authenticated_user=True,
         template_name="accounts/login.html",
         form_class=UserLoginForm),
         name='login'),
@@ -58,18 +61,13 @@ urlpatterns = [
         name='password_reset_complete',
     ),
 
-    # User dashboard
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('profile/edit/', views.edit_details, name='edit_details'),
-    path('profile/delete_user/', views.delete_user, name='delete_user'),
-    path(
-        'profile/delete_confirm/',
-        TemplateView.as_view(
-            template_name='accounts/users/delete_confirm.html'),
-        name='delete_confirmation',
-    ),
+    # User Profile
+    path('profile/edit/', views.update_profile, name='update_profile'),
 
-    # Address
+    # User Dashboard
+    path('dashboard/', views.dashboard, name='dashboard'),
+
+    # User Addresses
     path('addresses/', views.view_address, name='addresses'),
     path('add_address/', views.add_address, name='add_address'),
     path('addresses/edit/<slug:id>/', views.edit_address, name='edit_address'),
@@ -77,9 +75,12 @@ urlpatterns = [
          views.delete_address, name='delete_address'),
     path('addresses/set_default/<slug:id>/',
          views.set_default, name='set_default'),
+
+    # Orders
     path('user_orders/', views.user_orders, name='user_orders'),
-    # Wish List
-    path('favorites', views.favorites, name='favorites'),
-    path('favorites/add_to_favorites/<int:id>',
-         views.add_to_favorites, name='user_favorites'),
+
+    # favorites
+    path('favorites/', views.user_favorites, name='user_favorites'),
+    path('favorites/update_favorite/<int:id>',
+         views.update_favorite, name='update_favorite'),
 ]

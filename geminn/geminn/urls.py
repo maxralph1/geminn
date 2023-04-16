@@ -9,8 +9,8 @@ urlpatterns = [
     path('', include('pages.urls', namespace='pages')),
     path('dashboard/', include('inventory.urls', namespace='inventory')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('checkout/', include('checkout.urls', namespace='checkout')),
     path('bag/', include('bag.urls', namespace='bag')),
+    path('checkout/', include('checkout.urls', namespace='checkout')),
     path('orders/', include('orders.urls', namespace='orders'))
 ]
 
