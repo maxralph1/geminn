@@ -6,8 +6,12 @@ Guides (usage and description) to the Gem-Inn application.
 
 1. [What Gem-Inn Is](#what-is-gem-inn)
 2. [Technologies Utilized in Crafting Gem-Inn](#technologies-utilized-in-crafting-gem-inn)
-3. [How to Install and Run the Gem-Inn Application Locally On Your Device](#how-to-install-and-run-the-gem-inn-application-locally-on-your-device)
-4. [Contributor's Words !important](#contributors-words-important)
+3. [Database Structure](#database-structure)
+4. [How to Install and Run the Gem-Inn Application Locally On Your Device](#how-to-install-and-run-the-gem-inn-application-locally-on-your-device)
+5. [Files to Update for your Payment Processing Keys](#files-to-update-for-your-payment-processing-keys)
+   1. [Paypal](#paypal)
+   2. [Stripe](#stripe)
+6. [Contributor's Words !important](#contributors-words-important)
 
 ## What Is Gem-Inn?
 
@@ -31,6 +35,10 @@ The online payment channels are handled by:
 
 1. **PayPal** (credit card and PayPal payments)
 2. **Stripe** (credit card payments) — (yet to come)
+
+## Database Structure
+
+(image for the database structure here)
 
 ## How to Install and Run the Gem-Inn Application Locally On Your Device
 
@@ -105,6 +113,18 @@ and
 ```
 py manage.py runserver
 ```
+
+## Files to Update for your Payment Processing Keys
+
+You must update these files following these instructions, to be able to process payments.
+
+### PayPal
+
+(instructions here)
+
+### Stripe
+
+(instructions here)
 
 ## Contributor's Words !important
 
