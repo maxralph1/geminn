@@ -12,12 +12,6 @@ from .models import Brand, Discount, Category, SubCategory, Product, ProductUnit
 from .forms import BrandForm, DiscountForm, CategoryForm, SubCategoryForm, ProductForm, ProductUnitForm, ProductSpecificationForm, ProductSpecificationValueForm, ProductUnitImageForm, ProductReviewForm
 
 
-# def home(request):
-#     products = Product.objects.prefetch_related(
-#         'product_image').filter(is_active=True)
-#     return render(request, 'inventory/index.html', {'products': products})
-
-
 # Brands
 
 @login_required
@@ -43,10 +37,12 @@ def add_brand(request):
             brand.twitter = brand_form.cleaned_data['twitter']
             brand.added_by = request.user
             brand.save()
-            messages.success(request, brand.title + ' added')
+            messages.success(request, brand.title + ' added.')
             return redirect('inventory:view_brand', brand.slug)
         else:
-            return HttpResponse('Error handler content', status=400)
+            messages.warning(
+                request, brand.title + ' not added. Check that you filled out the form correctly.')
+            return redirect('inventory:view_brand', brand.slug)
     else:
         brand_form = BrandForm()
 
@@ -72,7 +68,10 @@ def update_brand(request, brand_slug):
     else:
         brand = Brand.objects.get(slug=brand_slug)
         brand_form = BrandForm(instance=brand)
-    return render(request, 'inventory/brands/edit.html', {'brand': brand, 'form': brand_form})
+    return render(request, 'inventory/brands/edit.html', {
+        'brand': brand,
+        'form': brand_form
+    })
 
 
 @login_required

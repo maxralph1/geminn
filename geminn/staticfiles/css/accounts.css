@@ -1,0 +1,64 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Thasadith:wght@700&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Gruppo&display=swap');
+
+body {
+	/* font-family: 'Thasadith', sans-serif; */
+	/* font-family: 'Comfortaa', cursive; */
+	font-family: 'Gruppo', cursive;
+	font-weight: bold;
+}
+
+.search-bar {
+	top: 4.8rem; 
+	right: 2.5rem;
+	z-index: 20; 
+	color: red;
+	outline: 2.5px solid red;
+	border-radius: 10px;
+	border: 0;
+}
+
+/* .search-bar .search input:focus, 
+.search-bar .search input:focus,  */
+.search-bar input {
+	border: 0;
+	outline: 0;
+	padding-inline: 10px;
+	border-radius: 10px;
+}
+
+.shopping-cart {
+	bottom: 2.5rem; 
+	right: 2.5rem; 
+	z-index: 30;
+}
+
+.cart-counter {
+    display: block;
+    position: fixed;
+	text-align: center;
+	color:darkred;
+	background-color: white;
+    outline: 2px solid red;
+    color: darkred; 
+	width: 1.25rem;
+	height: 1.25rem;
+    right: 2.15rem; 
+    bottom: 3.15rem;
+	border-radius: 50%;
+	font-size: 14px;
+}
+
+.last-section-margin {
+	margin-bottom: 7rem;
+}
+
+.footer-fixed {
+	position: fixed; 
+	bottom:0; 
+	width: 100%
+}
+
+
+
