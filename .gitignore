@@ -1,4 +1,12 @@
-venv
+####
+# Django 
+####
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+venv/
 .env
+htmlcov
 dev_notes.txt
-db.sqlite3

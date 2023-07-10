@@ -8,8 +8,10 @@ colorama==0.4.6
 coverage==7.2.2
 cryptography==40.0.1
 Django==4.1.7
+django-mathfilters==1.0.0
 factory-boy==3.2.1
 Faker==18.3.2
+gunicorn==20.1.0
 idna==3.4
 inflection==0.5.1
 iniconfig==2.0.0
