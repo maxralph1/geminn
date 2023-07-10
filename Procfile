@@ -1,1 +1,1 @@
-web: gunicorn 'geminn.wsgi'
+web: gunicorn 'geminn.geminn.wsgi'
