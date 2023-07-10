@@ -14,7 +14,18 @@ SECRET_KEY = 'django-insecure-ck1qa*7_pccfvtzqg+o2&ev0i=3**82%i%w)-iw$9la8zw3sfm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*',
+                 'gem-inn-production.up.railway.app',
+                 'railway.app',
+                 '.railway.app',
+                 'up.railway.app',
+                 '.up.railway.app',
+                 'app',
+                 '.app',
+                 'http://gem-inn-production.up.railway.app',
+                 'https://gem-inn-production.up.railway.app',
+                 'localhost',
+                 '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['https://gem-inn-production.up.railway.app']
 
@@ -142,3 +153,10 @@ LOGIN_URL = '/accounts/login/'
 
 # Email setting
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'maxralph01@gmail.com'
+EMAIL_HOST_PASSWORD = 'aquu jujq cufm znfw'
