@@ -18,7 +18,7 @@ DEBUG = False
 # ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = ['geminn.up.railway.app']
 
-CSRF_TRUSTED_ORIGINS = ['https://geminn-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://geminn.up.railway.app']
 
 
 # Application definition
