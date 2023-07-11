@@ -7,6 +7,7 @@
 __pycache__/
 
 venv/
+db.sqlite3
 .env
 htmlcov
 dev_notes.txt
