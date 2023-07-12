@@ -61,12 +61,12 @@
 
 
 
-                    <div class="d-flex column-gap-4">
+                    <div class="d-flex align-items-center column-gap-4">
                         <div class="d-md-block">
                             {% for product_image in product_unit_images %}
                                 {% if product_image.product == product %}
                                     
-                                    <img id="image_setter" src="{{ product_image.image.url }}" class="object-fit-cover border rounded product-unit-images" alt="{{ product_image.alt_text }}" style="width: 15rem;">
+                                    <img id="image_setter" src="{{ product_image.image.url }}" class="object-fit-cover border rounded product-unit-images" alt="{{ product_image.alt_text }}" style="width: 10rem;">
                                     
                                 {% endif %}
                             {% endfor %}
@@ -74,7 +74,7 @@
                         <div class="d-flex flex-column row-gap-2">
                             <div class="">
                                 <a class="text-decoration-none text-reset" href="{{ item.product.get_absolute_url }}">
-                                    <p class="fs-5 fw-bold pb-0">{{ product.title }}</p>
+                                    <p class="fs-5 fw-bold pb-0">{{ product.title|truncatechars:25 }}</p>
                                 </a>
                             </div>
                             <div>
