@@ -12,7 +12,7 @@
                 <span class="text-white text-decoration-none">
                     <div class="btn btn-secondary py-0 px-2">
 
-                        <a href="{% url 'accounts:update_profile' %}" class="text-white text-decoration-none">Hi {{ user.get_username }} &nbsp; &nbsp;</a>
+                        <a href="{% url 'accounts:update_profile' %}" class="text-white text-decoration-none">Hi {{ request.user.first_name }} &nbsp; &nbsp;</a>
 
                         <a class="btn btn-danger" href="{% url 'accounts:logout' %}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">

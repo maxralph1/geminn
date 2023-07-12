@@ -23,8 +23,8 @@
                                             <img src="{{ product_image.image.url }}" class="object-fit-cover rounded" alt="..." style="width: 8.5rem;">
                                         {% endif %}
                                     {% endfor %}
-                                    <p class="card-text m-0 fw-bold">{{ favorite.title }}</p>
-                                    <p class="card-text m-0">{{ favorite.description }}</p>
+                                    <p class="card-text m-0 fw-bold">{{ favorite.title|truncatechars:25 }}</p>
+                                    <p class="card-text m-0">{{ favorite.description|truncatechars:35 }}</p>
                                     <p class="card-text m-0">{{ favorite.retail_price }} {{ favorite.retail_price_unit }}</p>
                                 </div>
                                 

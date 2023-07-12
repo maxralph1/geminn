@@ -30,8 +30,8 @@
 
                     <div class="card-body">
                         <a href="{% url 'pages:product' product_unit.product.slug %}" class="text-decoration-none text-body">
-                            <h5 class="card-title">{{ product_unit.product.title }}</h5>
-                            <p class="card-text"><span class="text-decoration-none text-body">{{ product_unit.product.description }}</span></p>
+                            <h5 class="card-title">{{ product_unit.product.title|truncatechars:60 }}</h5>
+                            <p class="card-text"><span class="text-decoration-none text-body">{{ product_unit.product.description|truncatechars:120 }}</span></p>
                             <p class="d-flex justify-content-end gap-2">
                                 <button id="add_to_bag" value="{{ product.id }}" href="#" class="btn btn-danger">
                                     <span class="fw-bold">Bag Choices</span>

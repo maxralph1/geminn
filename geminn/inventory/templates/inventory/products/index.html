@@ -38,8 +38,8 @@
                 <tbody>
                     {% for product in products %}
                         <tr>
-                            <td>{{ product.title }}</td>
-                            <td>{{ product.description }}</td>
+                            <td>{{ product.title|truncatechars:70 }}</td>
+                            <td>{{ product.description|truncatechars:120 }}</td>
                             <td>{{ product.category }}</td>
                             <td>{{ product.sub_category }}</td>
                             <td>{{ product.brand }}</td>

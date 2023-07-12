@@ -148,9 +148,9 @@
                     <tbody>
                         {% for product_unit in product_units %}
                             <tr>
-                                <td>{{ product_unit.title|title }}</td>
+                                <td>{{ product_unit.title|title|truncatechars:60 }}</td>
                                 <td>{{ product_unit.sku }}</td>
-                                <td>{{ product_unit.description }}</td>
+                                <td>{{ product_unit.description|truncatechars:120 }}</td>
                                 <td>{{ product_unit.purchase_price }} {{ product_unit.purchase_price_unit }}</td>
                                 <td>{{ product_unit.retail_price }} {{ product_unit.retail_price_unit }}</td>
                                 <td>{{ product_unit.initial_discount_value }}</td>
@@ -202,7 +202,7 @@
 
     <section id="add-product-unit" class="px-3 mt-5">
         <div class="d-flex justify-content-between row-gap-3 column-gap-5 pt-1 mb-3 border-bottom">
-            <h4 class="fs-5">Add a new product unit to the product <span class="fw-bold">{{ product.title|title }}</span></h4>
+            <h4 class="fs-5">Add a new product unit to the product <span class="fw-bold">{{ product.title|title|truncatechars:60 }}</span></h4>
             <a href="#" class="text-end text-decoration-none text-danger">Go back to top&nbsp;
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-square-fill text-danger" viewBox="0 0 16 16">
                     <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
