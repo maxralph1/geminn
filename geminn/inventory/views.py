@@ -796,7 +796,11 @@ def add_product_review(request, product_slug):
 
                 messages.success(
                     request, 'Your review has been added')
-                # return redirect('pages:product', product_slug)
+                return redirect('pages:product', product_slug)
+                # if request.user.is_authenticated:
+                #     return redirect('inventory:product', product_slug)
+                # else:
+                #     return redirect('pages:product', product_slug)
             else:
                 return HttpResponse('Error handler content', status=400)
         # else:

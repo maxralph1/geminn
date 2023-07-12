@@ -107,12 +107,14 @@
                         <span class="fs-5 d-flex flex-column">
                             <span class="">{{ product_specification.title|lower }}</span>
                             <select id="select" class="p-1 rounded">
-                            {% for value in related_product_specification_values %}
+                            {% for value in related_product_specification_values|dictsort:'value' %}
                                 {% if product_specification.slug == value.product_specification.slug %}
                                     {% if value.value %}
-                                        <option value="{{ value }}" class="fw-bold">
-                                            {{ value.value|lower }}
-                                        </option>
+                                        {% ifchanged %}
+                                            <option value="{{ value }}" class="fw-bold">
+                                                {{ value.value|lower }}
+                                            </option>
+                                        {% endifchanged %}
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
